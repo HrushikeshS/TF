@@ -1,0 +1,3 @@
+#ignore tf state files
+
+.tfstate
