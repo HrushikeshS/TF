@@ -14,24 +14,25 @@ provider "aws" {
 
 locals {
   Name = "Project Multi-Resource"
-  m = length(var.ec2_config)
+  m    = length(var.ec2_config)
 }
 
 resource "aws_vpc" "myvpc" {
-    cidr_block = "10.0.0.0/16"
-    tags = {
-      Name = "${local.Name} -VPC"
-    }
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "${local.Name} -VPC"
+  }
 }
 
 resource "aws_subnet" "mysubnet" {
-    vpc_id = aws_vpc.myvpc.id
-    cidr_block = "10.0.${count.index}.0/24"
-    count = 2
-    tags = {
-      Name = "Subnet-${count.index+1}-${local.Name}"
-    }
+  vpc_id     = aws_vpc.myvpc.id
+  cidr_block = "10.0.${count.index}.0/24"
+  count      = 2
+  tags = {
+    Name = "Subnet-${count.index + 1}-${local.Name}"
+  }
 }
+/* #logic for count
 #creting 4 ec2 in 2 diff. subnet
 resource "aws_instance" "MyIncident1" {
   ami           = element(var.ec2_config[*].ami,count.index%2)
@@ -43,14 +44,29 @@ resource "aws_instance" "MyIncident1" {
     Name = "EC2-${count.index+1}-${local.Name}"
   }
 }
+*/
+#logic for for each
+#creting 4 ec2 in 2 diff. subnet with for each 
+resource "aws_instance" "MyIncident1" {
+  for_each      = var.ec2_mapping
+
+  ami           = each.value.ami
+  instance_type = each.value.ec2_type
+  subnet_id     = element(aws_subnet.mysubnet[*].id, index(keys(var.ec2_mapping), each.key) % length(aws_subnet.mysubnet)) #logic to 
+
+  tags = {
+    Name = "EC2-${each.key}-${local.Name}"
+  }
+}
+
 
 
 output "vpcName" {
-    value = aws_vpc.myvpc.id
+  value = aws_vpc.myvpc.id
 }
 output "subnet1" {
-    value = aws_subnet.mysubnet[0].id
+  value = aws_subnet.mysubnet[0].id
 }
 output "subnet2" {
-    value = aws_subnet.mysubnet[1].id
+  value = aws_subnet.mysubnet[1].id
 }
