@@ -1,5 +1,3 @@
 terraform {
-  provider_meta "" {
-    
-  }
+
 }
