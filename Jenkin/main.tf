@@ -51,7 +51,6 @@
                   sudo systemctl daemon-reload
                   systemctl start jenkins
                   systemctl enable jenkins
-                 # sudo cat /var/lib/jenkins/secrets/initialAdminPassword
                   EOF
 
       tags = {
