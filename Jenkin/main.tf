@@ -4,7 +4,7 @@
     }
 
     # Create a Security Group for SSH and HTTP access
-    resource "aws_security_group" "jenkins_sg1" {
+    resource "aws_security_group" "jenkins_sg" {
       name        = "jenkins-security-group"
       description = "Allow SSH and HTTP traffic"
       ingress {
