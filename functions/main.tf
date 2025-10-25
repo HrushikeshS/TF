@@ -23,5 +23,5 @@ output "output" {
     #value = join(":",var.List)
     #value = contains(var.List,"server1")              #true
     #value = toset(var.List)                            #wil show set from list
-    value = max(1,2,3,55)
+    value = max(1,2,3,55,44)
     }
